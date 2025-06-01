@@ -1,41 +1,26 @@
 "use client"
 
+import { RegisterInput, useRegister } from "@/lib/queries/auth/useRegister"
 import { Button, Paper, PasswordInput, TextInput, Title } from "@mantine/core"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
-
-type FormData = {
-  email: string
-  password: string
-}
 
 export default function RegisterForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>()
-  const [loading, setLoading] = useState(false)
+  } = useForm<RegisterInput>()
   const router = useRouter()
+  const { mutateAsync, isPending } = useRegister()
 
-  const onSubmit = async (data: FormData) => {
-    setLoading(true)
-
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    })
-
-    if (res.ok) {
+  const onSubmit = async (data: RegisterInput) => {
+    try {
+      await mutateAsync(data)
       router.push("/dashboard")
-    } else {
-      const { error } = await res.json()
-      alert(error)
+    } catch (error) {
+      console.error(error)
     }
-
-    setLoading(false)
   }
 
   return (
@@ -72,7 +57,7 @@ export default function RegisterForm() {
           mb="md"
         />
 
-        <Button fullWidth type="submit" loading={loading}>
+        <Button fullWidth type="submit" loading={isPending}>
           Register
         </Button>
       </form>

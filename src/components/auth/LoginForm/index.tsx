@@ -1,40 +1,26 @@
 "use client"
 
+import { LoginInput, useLogin } from "@/lib/queries/auth/useLogin"
 import { Button, Paper, PasswordInput, TextInput, Title } from "@mantine/core"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
-
-type FormData = {
-  email: string
-  password: string
-}
 
 export default function LoginForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>()
-  const [loading, setLoading] = useState(false)
+  } = useForm<LoginInput>()
   const router = useRouter()
+  const { mutateAsync, isPending } = useLogin()
 
-  const onSubmit = async (data: FormData) => {
-    setLoading(true)
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    })
-
-    if (res.ok) {
+  const onSubmit = async (data: LoginInput) => {
+    try {
+      await mutateAsync(data)
       router.push("/dashboard")
-    } else {
-      const { error } = await res.json()
-      alert(error)
+    } catch (error) {
+      console.error(error)
     }
-
-    setLoading(false)
   }
 
   return (
@@ -71,7 +57,7 @@ export default function LoginForm() {
           mb="md"
         />
 
-        <Button fullWidth type="submit" loading={loading}>
+        <Button fullWidth type="submit" loading={isPending}>
           Login
         </Button>
       </form>
