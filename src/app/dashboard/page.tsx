@@ -1,3 +1,4 @@
+import ObjectList from "@/components/objects/ObjectList"
 import { SignOutButton } from "@/components/shared/SignOutButton"
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
@@ -14,6 +15,7 @@ export default async function DashboardPage() {
       <p>Hello {data.user.email}</p>
       <SignOutButton />
       <Link href="/dashboard/create">create new object</Link>
+      <ObjectList />
     </div>
   )
 }

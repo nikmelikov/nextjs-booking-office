@@ -3,12 +3,6 @@ import { createClient } from "@/lib/supabase/server"
 import { NextApiResponse } from "next"
 import { NextResponse } from "next/server"
 
-type ObjectForm = {
-  name: string
-  address: string
-  capacity: number
-}
-
 export async function POST(req: Request, res: NextApiResponse) {
   const supabase = await createClient()
   const {
@@ -18,8 +12,6 @@ export async function POST(req: Request, res: NextApiResponse) {
   if (!user) return res.status(401).json({ error: "Unauthorized" })
 
   const { name, address, capacity } = await req.json()
-  console.log("name: ", name)
-
   const { error } = await supabase.from("objects").insert([
     {
       name,

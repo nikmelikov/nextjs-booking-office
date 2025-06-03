@@ -1,15 +1,10 @@
 "use client"
 
+import { ObjectForm } from "@/app/api/objects/model"
 import { useCreateObject } from "@/lib/queries/objects/useCreateObject"
 import { Button, NumberInput, Paper, TextInput, Title } from "@mantine/core"
 import { useRouter } from "next/navigation"
 import { Controller, useForm } from "react-hook-form"
-
-type ObjectForm = {
-  name: string
-  address: string
-  capacity: number
-}
 
 export function CreateObjectForm() {
   const {
@@ -22,7 +17,6 @@ export function CreateObjectForm() {
   const router = useRouter()
 
   const onSubmit = async (data: ObjectForm) => {
-    console.log("data: ", data)
     try {
       await createObject(data)
       router.push("/dashboard")

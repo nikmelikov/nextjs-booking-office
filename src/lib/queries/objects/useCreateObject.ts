@@ -9,7 +9,7 @@ type ObjectForm = {
 export const useCreateObject = () => {
   return useMutation({
     mutationFn: async (data: ObjectForm) => {
-      const res = await fetch("/api/object/create", {
+      const res = await fetch("/api/objects/create", {
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },
